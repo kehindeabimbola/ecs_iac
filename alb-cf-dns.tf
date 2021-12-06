@@ -136,15 +136,13 @@ resource "aws_cloudfront_distribution" "api_distribution" {
 
 #DNS Configuration
 
-#Get already configured hosted zone from route53
-
-data "aws_route53_zone" "dns" {
+resource "aws_route53_zone" "jumpcloud" {
   name = var.dns-name
 }
 
 resource "aws_route53_record" "api-dns-record" {
-  zone_id = data.aws_route53_zone.dns.zone_id
-  name    = "api.${data.aws_route53_zone.dns.name}"
+  zone_id = aws_route53_zone.jumpcloud.zone_id
+  name    = "api.${aws_route53_zone.jumpcloud.name}"
   type    = "A"
   alias {
     name                   = aws_cloudfront_distribution.api_distribution.domain_name
