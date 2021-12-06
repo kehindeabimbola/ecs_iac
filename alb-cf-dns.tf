@@ -137,7 +137,7 @@ resource "aws_cloudfront_distribution" "api_distribution" {
 #DNS Configuration
 
 resource "aws_route53_zone" "jumpcloud" {
-  name = var.dns-name
+  name = "jumpcloud.com"
 }
 
 resource "aws_route53_record" "api-dns-record" {
