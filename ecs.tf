@@ -6,17 +6,17 @@ resource "aws_kms_key" "kms_key" {
 
 #creating cloud watch log groups
 resource "aws_cloudwatch_log_group" "ecs_log" {
-  name = "jumpcloud-ecs-logs"
+  name = "ecscloud-ecs-logs"
 }
 
 resource "aws_cloudwatch_log_group" "api-loggroup" {
-  name              = "jumpcloud-api-log-group"
+  name              = "ecscloud-api-log-group"
   retention_in_days = 3
 }
 
 #creating ecs cluster
 resource "aws_ecs_cluster" "ecs_cluster" {
-  name               = "JumpCloud-ECS-Cluster"
+  name               = "ecsCloud-ECS-Cluster"
   capacity_providers = ["FARGATE"]
   default_capacity_provider_strategy {
     capacity_provider = "FARGATE"
@@ -40,8 +40,8 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 }
 
 #creating ecs api service
-resource "aws_ecs_service" "jumpcloud-api" {
-  name                               = "jumpcloud-api"
+resource "aws_ecs_service" "ecscloud-api" {
+  name                               = "ecscloud-api"
   cluster                            = aws_ecs_cluster.ecs_cluster.id
   desired_count                      = 2
   deployment_maximum_percent         = 200
@@ -50,10 +50,10 @@ resource "aws_ecs_service" "jumpcloud-api" {
   scheduling_strategy                = "REPLICA"
   force_new_deployment               = true
   enable_execute_command             = true
-  task_definition                    = aws_ecs_task_definition.jumpcloud-api.arn
+  task_definition                    = aws_ecs_task_definition.ecscloud-api.arn
   service_registries {
     registry_arn   = aws_service_discovery_service.api-service.arn
-    container_name = "jumpcloud_api_container"
+    container_name = "ecscloud_api_container"
   }
   deployment_controller {
     type = "ECS"
@@ -72,14 +72,14 @@ resource "aws_ecs_service" "jumpcloud-api" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.api_alb-tg.arn
-    container_name   = "jumpcloud_api_container"
+    container_name   = "ecscloud_api_container"
     container_port   = 80
   }
 }
 
 #creating api task definition 
-resource "aws_ecs_task_definition" "jumpcloud-api" {
-  family                   = "jumpcloud-api"
+resource "aws_ecs_task_definition" "ecscloud-api" {
+  family                   = "ecscloud-api"
   execution_role_arn       = aws_iam_role.ecs_task_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
   requires_compatibilities = ["FARGATE"]
@@ -91,9 +91,9 @@ resource "aws_ecs_task_definition" "jumpcloud-api" {
     {
         "cpu": 512,
         "essential": true,
-        "image": "olayori/jump_api:latest",
+        "image": "olayori/ecs_api:latest",
         "memory": 1024,
-        "name": "jumpcloud_api_container",
+        "name": "ecscloud_api_container",
         "portMappings": [
             {
                 "containerPort": 80,

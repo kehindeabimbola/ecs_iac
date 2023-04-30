@@ -9,8 +9,8 @@ resource "aws_key_pair" "key" {
   public_key = file("~/.ssh/id_rsa.pub")
 }
 
-#Creating a jump server
-resource "aws_instance" "jump_server" {
+#Creating a ecs server
+resource "aws_instance" "ecs_server" {
   ami                         = data.aws_ssm_parameter.linuxAmi.value
   instance_type               = "t3.micro"
   key_name                    = aws_key_pair.key.key_name
@@ -18,7 +18,7 @@ resource "aws_instance" "jump_server" {
   vpc_security_group_ids      = [aws_security_group.dmz-sg.id]
   subnet_id                   = aws_subnet.subnet1-pub.id
   tags = {
-    Name = "jump_server"
+    Name = "ecs_server"
   }
 }
 
@@ -34,15 +34,15 @@ resource "aws_db_subnet_group" "dbgroup" {
 
 #Creating pgsql aurora cluster on private subnet
 resource "aws_rds_cluster" "dbserver" {
-  cluster_identifier           = "jumpcloudcluster"
-  database_name                = "jumpclouddb"
+  cluster_identifier           = "ecscloudcluster"
+  database_name                = "ecsclouddb"
   db_subnet_group_name         = aws_db_subnet_group.dbgroup.id
   deletion_protection          = false
   engine                       = "aurora-postgresql"
   engine_mode                  = "serverless"
   engine_version               = "10.14"
   kms_key_id                   = aws_kms_key.kms_key.arn
-  master_username              = "ladberg"
+  master_username              = "kabimbola"
   master_password              = "star1234"
   port                         = 5432
   preferred_backup_window      = "11:00-11:30"
@@ -60,6 +60,6 @@ resource "aws_rds_cluster" "dbserver" {
     timeout_action           = "RollbackCapacityChange"
   }
   tags = {
-    "Name" = "Jumpcloud-db"
+    "Name" = "ecscloud-db"
   }
 }

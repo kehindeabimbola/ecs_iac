@@ -25,7 +25,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_role_attachment" {
 }
 
 resource "aws_iam_role_policy" "additional_perm_policy" {
-  name   = "jumpcloud-additional-perm-policy"
+  name   = "ecscloud-additional-perm-policy"
   role   = aws_iam_role.ecs_task_role.id
   policy = <<EOF
 {

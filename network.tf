@@ -133,7 +133,7 @@ resource "aws_security_group" "lb-sg" {
   }
 }
 
-#Creating SG for Jump Server in DMZ, ssh from specific IP 
+#Creating SG for ecs Server in DMZ, ssh from specific IP 
 resource "aws_security_group" "dmz-sg" {
   name        = "dmz-sg"
   description = "Allow ssh"

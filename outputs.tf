@@ -8,8 +8,8 @@ output "api_cloudfront_url" {
 }
 
 
-output "jump-server-public-IP" {
-  value = aws_instance.jump_server.public_ip
+output "ecs-server-public-IP" {
+  value = aws_instance.ecs_server.public_ip
 }
 
 output "dbserver-hostname" {

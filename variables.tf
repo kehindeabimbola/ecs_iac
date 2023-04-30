@@ -1,6 +1,6 @@
 variable "profile" {
   type    = string
-  default = "cloud_user"
+  default = "default"
 }
 
 variable "external_ip" {

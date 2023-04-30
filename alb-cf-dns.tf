@@ -1,6 +1,6 @@
 #Creating service discovery namespace
 resource "aws_service_discovery_private_dns_namespace" "dns" {
-  name        = "jumpcloud.int"
+  name        = "ecscloud.int"
   description = "Namespace for web service"
   vpc         = aws_vpc.vpc.id
 }
@@ -136,13 +136,13 @@ resource "aws_cloudfront_distribution" "api_distribution" {
 
 #DNS Configuration
 
-resource "aws_route53_zone" "jumpcloud" {
-  name = "jumpcloud.com"
+resource "aws_route53_zone" "ecscloud" {
+  name = "ecscloud.com"
 }
 
 resource "aws_route53_record" "api-dns-record" {
-  zone_id = aws_route53_zone.jumpcloud.zone_id
-  name    = "api.${aws_route53_zone.jumpcloud.name}"
+  zone_id = aws_route53_zone.ecscloud.zone_id
+  name    = "api.${aws_route53_zone.ecscloud.name}"
   type    = "A"
   alias {
     name                   = aws_cloudfront_distribution.api_distribution.domain_name
